@@ -27,10 +27,10 @@ import {
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    create: admins,
+    create: authenticated,
     delete: admins,
     read: authenticatedOrPublished,
-    update: admins,
+    update: authenticated,
   },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property

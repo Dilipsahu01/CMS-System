@@ -9,7 +9,7 @@ export const Header: GlobalConfig = {
   slug: 'header',
   access: {
     read: () => true,
-    update: admins,
+    update: ({ req: { user } }) => Boolean(user),
   },
   fields: [
     {
