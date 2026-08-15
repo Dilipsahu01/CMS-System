@@ -17,6 +17,24 @@ export async function POST(): Promise<Response> {
       },
     })
 
+    // ENSURE ADMIN USER EXISTS
+    const existingUsers = await payload.find({
+      collection: 'users',
+      where: { email: { equals: 'admin@cms.com' } },
+    })
+
+    if (existingUsers.docs.length === 0) {
+      await payload.create({
+        collection: 'users',
+        data: {
+          email: 'admin@cms.com',
+          password: 'Admin@123',
+          name: 'CMS Admin',
+          roles: ['admin'],
+        },
+      })
+    }
+
     // HOME PAGE
     await payload.create({
       collection: 'pages',

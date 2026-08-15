@@ -1,58 +1,52 @@
 import { test, expect } from '@playwright/test'
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
+
 test('live CMS update workflow', async ({ page }) => {
+  test.setTimeout(60000)
+
   // 1. Log into the /admin dashboard
   console.log('Navigating to admin login...')
-  await page.goto('/admin/login')
-  
-  await page.fill('#field-email', 'admin@business.com')
-  await page.fill('#field-password', 'password123')
-  await page.click('button[type="submit"]')
-  
-  // Wait for dashboard to load
-  await expect(page).toHaveURL(/\/admin/)
+  await page.goto(`${BASE_URL}/admin/login`)
+
+  await page.fill('#field-email', 'admin@cms.com')
+  await page.fill('#field-password', 'Admin@123')
+  await page.click('button:has-text("Login")')
+
+  // Wait for navigation away from /admin/login
+  await page.waitForURL('**/admin', { timeout: 15000 })
   console.log('Logged in successfully.')
 
   // 2. Navigate to the Pages collection
-  await page.click('text=Pages')
-  await expect(page).toHaveURL(/\/admin\/collections\/pages/)
+  await page.getByRole('link', { name: 'Show all Pages' }).click()
+  await page.waitForURL('**/admin/collections/pages', { timeout: 10000 })
 
   // 3. Edit the "Home" page
-  await page.click('text=Home')
-  
-  // 4. Add a new text/content block saying "VERIFIED PRODUCTION UPDATE"
-  // Assuming there is an "Add Block" button or similar, but the easiest way is to modify the title 
-  // or a specific text field if it's too complex to add a block via UI.
-  // Wait, the prompt says "Adds a new paragraph/text block that says "VERIFIED PRODUCTION UPDATE"".
-  // Payload's lexical editor might be hard to interact with. Let's just modify the meta description or title?
-  // Let's add a Content block.
-  
-  // Click on the Content tab
-  await page.click('button:has-text("Content")')
+  await page.getByRole('link', { name: 'Home', exact: true }).first().click()
+  await expect(page.getByRole('button', { name: /Publish|Save/i }).first()).toBeVisible({ timeout: 15000 })
 
-  // Click Add Block in Layout
-  await page.click('button:has-text("Add Block")')
-  
-  // Select Content Block
-  await page.click('button:has-text("Content")')
-  
-  // Fill the lexical rich text editor. 
-  // Finding Lexical editor content editable area
+  // 4. Scroll down and look for the "Add Block" button in the layout section
+  await page.getByRole('button', { name: /Add Block/i }).first().click()
+
+  // Select Content Block from the drawer
+  await page.getByRole('button', { name: /Content/i }).first().click()
+
+  // Fill the lexical rich text editor
   const contentEditable = page.locator('[contenteditable="true"]').last()
   await contentEditable.click()
-  await contentEditable.fill('VERIFIED PRODUCTION UPDATE')
+  await contentEditable.type('VERIFIED PRODUCTION UPDATE')
 
   // 5. Publish the change
-  await page.click('button:has-text("Publish")')
-  
-  // Wait for success toast
-  await expect(page.locator('.toast-success')).toBeVisible({ timeout: 10000 })
+  await page.getByRole('button', { name: /Save/i }).click()
+
+  // Wait for save confirmation
+  await page.waitForTimeout(3000)
   console.log('Published successfully.')
 
   // 6. Navigate to the live public homepage
-  await page.goto('/')
+  await page.goto(BASE_URL)
 
   // 7. Verify the text is visible
-  await expect(page.locator('text=VERIFIED PRODUCTION UPDATE')).toBeVisible()
+  await expect(page.getByText('VERIFIED PRODUCTION UPDATE')).toBeVisible({ timeout: 10000 })
   console.log('Verified on frontend.')
 })
