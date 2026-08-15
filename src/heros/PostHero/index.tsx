@@ -1,14 +1,10 @@
-import { formatDateTime } from 'src/utilities/formatDateTime'
+import { formatDateTime } from '@/utilities/formatDateTime'
 import React from 'react'
-
-import type { Post } from '@/payload-types'
-
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
 
-export const PostHero: React.FC<{
-  post: Post
-}> = ({ post }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const PostHero: React.FC<{ post: any }> = ({ post }) => {
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
 
   const hasAuthors =
@@ -19,7 +15,7 @@ export const PostHero: React.FC<{
       <div className="container z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
         <div className="col-start-1 col-span-1 md:col-start-2 md:col-span-2">
           <div className="uppercase text-sm mb-6">
-            {categories?.map((category, index) => {
+            {categories?.map((category: any, index: number) => {
               if (typeof category === 'object' && category !== null) {
                 const { title: categoryTitle } = category
 
