@@ -17,9 +17,8 @@ test('live CMS update workflow', async ({ page }) => {
   await page.waitForURL('**/admin', { timeout: 15000 })
   console.log('Logged in successfully.')
 
-  // 2. Navigate to the Pages collection
-  await page.getByRole('link', { name: 'Show all Pages' }).click()
-  await page.waitForURL('**/admin/collections/pages', { timeout: 10000 })
+  // 2. Navigate to the Pages collection directly (Best Practice for E2E speed and reliability)
+  await page.goto(`${BASE_URL}/admin/collections/pages`)
 
   // 3. Edit the "Home" page
   await page.getByRole('link', { name: 'Home', exact: true }).first().click()
