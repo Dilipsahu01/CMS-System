@@ -1,0 +1,22 @@
+
+> business-website@1.0.0 dev
+> cross-env NODE_OPTIONS=--no-deprecation next dev
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.61:3000
+- Environments: .env
+✓ Ready in 245ms
+✓ Running next.config.ts took 23ms
+- Experiments (use with caution):
+  ⨯ turbopackServerFastRefresh
+
+[20:59:50] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+[20:59:55] [32mINFO[39m: [36mRevalidating page at path: /[39m
+[20:59:56] [32mINFO[39m: [36mRevalidating page at path: /about[39m
+[20:59:57] [32mINFO[39m: [36mRevalidating page at path: /contact[39m
+ POST /next/seed 200 in 7.7s (next.js: 230ms, application-code: 7.4s)
+ GET / 200 in 1436ms (next.js: 477ms, application-code: 959ms)
+[21:00:00] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /about 200 in 1880ms (next.js: 12ms, generate-params: 1719ms, application-code: 149ms)
+ GET /contact 200 in 136ms (next.js: 2ms, generate-params: 15ms, application-code: 119ms)

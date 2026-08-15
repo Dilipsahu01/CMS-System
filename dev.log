@@ -2,20 +2,26 @@
 > business-website@1.0.0 dev
 > cross-env NODE_OPTIONS=--no-deprecation next dev
 
-⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
 ▲ Next.js 16.3.0 (Turbopack)
-- Local:         http://localhost:3001
-- Network:       http://172.28.115.237:3001
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.61:3000
 - Environments: .env
-✓ Ready in 300ms
-✓ Running next.config.ts took 22ms
-⨯ Another next dev server is already running.
+✓ Ready in 242ms
+✓ Running next.config.ts took 23ms
+- Experiments (use with caution):
+  ⨯ turbopackServerFastRefresh
 
-- Local:        http://localhost:3000
-- PID:          277696
-- Dir:          /home/dilip_sahu/ArchscaleGuild/CMS/cms-builder
-- Log:          .next/dev/logs/next-development.log
-
-You can access the existing server at http://localhost:3000,
-or run kill 277696 to stop it and start a new one.
-[?25h
+[21:04:35] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /admin/login 200 in 3.3s (next.js: 1726ms, application-code: 1568ms)
+ GET /admin/login 200 in 562ms (next.js: 17ms, application-code: 545ms)
+ GET /api/users/me 200 in 1348ms (next.js: 1262ms, application-code: 86ms)
+ GET /api/users/me 200 in 19ms (next.js: 16ms, application-code: 4ms)
+ POST /api/users/login 200 in 930ms (next.js: 3ms, application-code: 927ms)
+ GET /admin 200 in 356ms (next.js: 22ms, application-code: 333ms)
+ GET /admin/collections/pages 200 in 1695ms (next.js: 4ms, application-code: 1692ms)
+ GET /api/users/me 200 in 147ms (next.js: 19ms, application-code: 129ms)
+ GET /api/users/me 200 in 129ms (next.js: 2ms, application-code: 127ms)
+ GET /admin/collections/pages/15 200 in 767ms (next.js: 20ms, application-code: 747ms)
+ GET /api/payload-preferences/collection-pages-15 200 in 141ms (next.js: 5ms, application-code: 136ms)
+ GET /api/payload-preferences/collection-pages 200 in 200ms (next.js: 3ms, application-code: 197ms)
+ POST /api/payload-preferences/collection-pages 200 in 80ms (next.js: 1.8ms, application-code: 78ms)
