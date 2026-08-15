@@ -1,5 +1,6 @@
 import React from 'react'
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { SignUpForm } from './SignUpForm'
 
 export const metadata: Metadata = {
@@ -19,9 +20,9 @@ export default function SignUpPage() {
         </h2>
         <p className="mt-2 text-center text-sm text-neutral-400">
           Or{' '}
-          <a href="/admin/login" className="font-medium text-white hover:text-neutral-300 transition-colors">
+          <Link href="/admin/login" className="font-medium text-white hover:text-neutral-300 transition-colors">
             login to your existing account
-          </a>
+          </Link>
         </p>
       </div>
 

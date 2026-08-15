@@ -1,11 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import { admins } from '../../access/admins'
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { FAQ } from '../../blocks/FAQ/config'
+import { Statistics } from '../../blocks/Statistics/config'
+import { Testimonials } from '../../blocks/Testimonials/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -23,10 +27,10 @@ import {
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: admins,
+    delete: admins,
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: admins,
   },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
@@ -71,7 +75,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, FormBlock],
+              blocks: [CallToAction, Content, MediaBlock, FormBlock, FAQ, Statistics, Testimonials],
               required: true,
               admin: {
                 initCollapsed: true,

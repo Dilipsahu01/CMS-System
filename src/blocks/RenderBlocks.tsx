@@ -7,11 +7,18 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 
+import { FAQBlock } from '@/blocks/FAQ/Component'
+import { StatisticsBlock } from '@/blocks/Statistics/Component'
+import { TestimonialsBlock } from '@/blocks/Testimonials/Component'
+
 const blockComponents = {
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  faq: FAQBlock,
+  statistics: StatisticsBlock,
+  testimonials: TestimonialsBlock,
 }
 
 export const RenderBlocks: React.FC<{

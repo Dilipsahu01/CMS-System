@@ -23,9 +23,9 @@ export async function POST(): Promise<Response> {
           hero: {
             ...home.hero,
             richText: {
-              ...home.hero.richText,
+              ...(home.hero?.richText as any),
               root: {
-                ...home.hero.richText.root,
+                ...(home.hero?.richText as any)?.root,
                 children: [
                   {
                     type: 'heading',
