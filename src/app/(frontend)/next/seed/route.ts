@@ -1,276 +1,319 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-export const maxDuration = 60
+export const maxDuration = 120
 
 export async function POST(): Promise<Response> {
   const payload = await getPayload({ config: configPromise })
 
   try {
-    // CLEANUP
-    await payload.delete({
-      collection: 'pages',
-      where: {
-        slug: {
-          in: ['home', 'about', 'contact'],
-        },
+    // 1. CLEANUP
+    console.log('Cleaning up existing data...')
+    const collectionsToClean = ['pages', 'header', 'footer', 'websites'] as const
+    
+    for (const collection of collectionsToClean) {
+      const existing = await payload.find({
+        collection,
+        limit: 1000,
+        depth: 0,
+        pagination: false,
+      })
+      for (const doc of existing.docs) {
+        await payload.delete({ collection, id: doc.id })
+      }
+    }
+
+    // Delete all users except admin@cms.com
+    const existingUsersToDelete = await payload.find({
+      collection: 'users',
+      limit: 1000,
+      depth: 0,
+      pagination: false,
+      where: { email: { not_equals: 'admin@cms.com' } }
+    })
+    for (const doc of existingUsersToDelete.docs) {
+      await payload.delete({ collection: 'users', id: doc.id })
+    }
+
+    // 2. CREATE USERS
+    console.log('Creating users...')
+    
+    // Admin User
+    let adminUser
+    const existingAdmins = await payload.find({ collection: 'users', where: { email: { equals: 'admin@cms.com' } } })
+    if (existingAdmins.docs.length === 0) {
+      adminUser = await payload.create({
+        collection: 'users',
+        data: { email: 'admin@cms.com', password: 'password', name: 'Admin User', roles: ['admin'] },
+      })
+    } else {
+      adminUser = existingAdmins.docs[0]
+    }
+
+    // Owner User
+    const ownerUser = await payload.create({
+      collection: 'users',
+      data: { email: 'owner@cms.com', password: 'password', name: 'Owner User', roles: ['user'] },
+    })
+
+    // Editor User
+    const editorUser = await payload.create({
+      collection: 'users',
+      data: { email: 'editor@cms.com', password: 'password', name: 'Editor User', roles: ['user'] },
+    })
+
+    // Author User
+    const authorUser = await payload.create({
+      collection: 'users',
+      data: { email: 'author@cms.com', password: 'password', name: 'Author User', roles: ['user'] },
+    })
+
+    // 3. CREATE WEBSITES
+    console.log('Creating websites...')
+    
+    const adminWebsite = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Admin Corporate Site',
+        slug: 'admin-corp',
+        owner: adminUser.id,
       },
     })
 
-    // ENSURE ADMIN USER EXISTS
-    const existingUsers = await payload.find({
-      collection: 'users',
-      where: { email: { equals: 'admin@cms.com' } },
+    const ownerWebsite = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Tech Startup (Owner)',
+        slug: 'tech-startup',
+        owner: ownerUser.id,
+        editors: [editorUser.id],
+        authors: [authorUser.id],
+      },
     })
 
-    if (existingUsers.docs.length === 0) {
+    const editorWebsite = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Editor Personal Blog',
+        slug: 'editor-blog',
+        owner: editorUser.id,
+      },
+    })
+
+    const authorWebsite = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Author Portfolio',
+        slug: 'author-portfolio',
+        owner: authorUser.id,
+      },
+    })
+
+    const multiPageSite1 = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Global Marketing',
+        slug: 'global-marketing',
+        owner: adminUser.id,
+      },
+    })
+
+    const multiPageSite2 = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Community Hub',
+        slug: 'community-hub',
+        owner: ownerUser.id,
+      },
+    })
+
+    const multiPageSite3 = await payload.create({
+      collection: 'websites',
+      data: {
+        title: 'Design Agency',
+        slug: 'design-agency',
+        owner: editorUser.id,
+      },
+    })
+
+    const singlePageWebsites = [adminWebsite, ownerWebsite, editorWebsite, authorWebsite]
+    const multiPageWebsites = [multiPageSite1, multiPageSite2, multiPageSite3]
+    const allWebsites = [...singlePageWebsites, ...multiPageWebsites]
+
+    // 4. CREATE PAGES, HEADERS, FOOTERS
+    console.log('Creating pages, headers, and footers...')
+    
+    // Create Single Page Websites
+    for (const website of singlePageWebsites) {
+      // Create Home Page
       await payload.create({
-        collection: 'users',
+        collection: 'pages',
         data: {
-          email: 'admin@cms.com',
-          password: 'Admin@123',
-          name: 'CMS Admin',
-          roles: ['admin'],
+          title: 'Home',
+          slug: 'home',
+          website: website.id,
+          author: typeof website.owner === 'object' ? website.owner.id : website.owner,
+          _status: 'published',
+          hero: { type: 'none' },
+          layout: [
+            {
+              blockType: 'content',
+              columns: [
+                {
+                  size: 'full',
+                  richText: {
+                    root: {
+                      type: 'root',
+                      children: [
+                        {
+                          type: 'heading',
+                          tag: 'h1',
+                          children: [{ type: 'text', version: 1, text: `Welcome to ${website.title}` }],
+                          version: 1,
+                          direction: 'ltr',
+                          format: 'center',
+                          indent: 0,
+                        },
+                        {
+                          type: 'paragraph',
+                          children: [{ type: 'text', version: 1, text: `This is a seeded page for the website: ${website.slug}. Feel free to edit this block!` }],
+                          version: 1,
+                          direction: 'ltr',
+                          format: 'center',
+                          indent: 0,
+                        },
+                      ],
+                      direction: 'ltr',
+                      format: '',
+                      indent: 0,
+                      version: 1,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
       })
     }
 
-    // HOME PAGE
-    await payload.create({
-      collection: 'pages',
-      data: {
-        title: 'Home',
-        slug: 'home',
-        _status: 'published',
-        hero: {
-          type: 'none',
-        },
-        layout: [
-          {
-            blockType: 'cta',
-            richText: {
-              root: {
-                type: 'root',
-                children: [
+    // Create Multi-Page Websites
+    for (const website of multiPageWebsites) {
+      const pagesToCreate = [
+        { title: 'Home', slug: 'home' },
+        { title: 'About Us', slug: 'about' },
+        { title: 'Contact', slug: 'contact' },
+        { title: 'Services', slug: 'services' },
+      ]
+
+      for (const p of pagesToCreate) {
+        await payload.create({
+          collection: 'pages',
+          data: {
+            title: p.title,
+            slug: p.slug,
+            website: website.id,
+            author: typeof website.owner === 'object' ? website.owner.id : website.owner,
+            _status: 'published',
+            hero: { type: 'none' },
+            layout: [
+              {
+                blockType: 'content',
+                columns: [
                   {
-                    type: 'heading',
-                    tag: 'h1',
-                    children: [{ type: 'text', version: 1, text: 'Content Management Reimagined' }],
-                    version: 1,
-                    direction: 'ltr',
-                    format: 'center',
-                    indent: 0,
+                    size: 'full',
+                    richText: {
+                      root: {
+                        type: 'root',
+                        children: [
+                          {
+                            type: 'heading',
+                            tag: 'h1',
+                            children: [{ type: 'text', version: 1, text: `${p.title} - ${website.title}` }],
+                            version: 1,
+                            direction: 'ltr',
+                            format: 'center',
+                            indent: 0,
+                          },
+                          {
+                            type: 'paragraph',
+                            children: [{ type: 'text', version: 1, text: `This is the ${p.title} page for ${website.title}. It is fully public!` }],
+                            version: 1,
+                            direction: 'ltr',
+                            format: 'center',
+                            indent: 0,
+                          },
+                        ],
+                        direction: 'ltr',
+                        format: '',
+                        indent: 0,
+                        version: 1,
+                      },
+                    },
                   },
                 ],
-                direction: 'ltr',
-                format: '',
-                indent: 0,
-                version: 1,
+              },
+            ],
+          },
+        })
+      }
+    }
+
+    for (const website of allWebsites) {
+      // Create Header
+      await payload.create({
+        collection: 'header',
+        data: {
+          website: website.id,
+          navItems: [
+            {
+              link: {
+                type: 'custom',
+                url: `/${website.slug}/home`,
+                label: 'Home',
               },
             },
-            links: [
+            ...(multiPageWebsites.includes(website) ? [
               {
                 link: {
                   type: 'custom',
-                  url: '/signup',
-                  label: 'Get Started',
-                  appearance: 'default',
+                  url: `/${website.slug}/about`,
+                  label: 'About',
                 },
               },
-            ],
-          },
-          {
-            blockType: 'statistics',
-            stats: [
-              { value: '10K+', label: 'Active Users' },
-              { value: '99.9%', label: 'Uptime' },
-              { value: '24/7', label: 'Support' },
-              { value: '50+', label: 'Integrations' },
-            ],
-          },
-          {
-            blockType: 'content',
-            columns: [
               {
-                size: 'full',
-                richText: {
-                  root: {
-                    type: 'root',
-                    children: [
-                      {
-                        type: 'heading',
-                        tag: 'h2',
-                        children: [{ type: 'text', version: 1, text: 'Features that scale with you' }],
-                        version: 1,
-                        direction: 'ltr',
-                        format: 'center',
-                        indent: 0,
-                      },
-                    ],
-                    direction: 'ltr',
-                    format: '',
-                    indent: 0,
-                    version: 1,
-                  },
+                link: {
+                  type: 'custom',
+                  url: `/${website.slug}/contact`,
+                  label: 'Contact',
                 },
               },
-            ],
-          },
-          {
-            blockType: 'testimonials',
-            title: 'Trusted by Industry Leaders',
-            testimonials: [
-              {
-                quote: 'This CMS builder transformed our workflow completely.',
-                author: 'Jane Doe',
-                role: 'CTO, TechCorp',
-              },
-              {
-                quote: 'Incredible flexibility and ease of use.',
-                author: 'John Smith',
-                role: 'Lead Developer',
-              },
-            ],
-          },
-          {
-            blockType: 'faq',
-            title: 'Frequently Asked Questions',
-            questions: [
-              {
-                question: 'Is it easy to set up?',
-                answer: 'Yes! It deploys seamlessly on Vercel.',
-              },
-              {
-                question: 'Can I add custom blocks?',
-                answer: 'Absolutely. The architecture is fully extensible.',
-              },
-            ],
-          },
-        ],
-      },
-    })
-
-    // ABOUT PAGE
-    await payload.create({
-      collection: 'pages',
-      data: {
-        title: 'About Us',
-        slug: 'about',
-        _status: 'published',
-        hero: {
-          type: 'none',
+            ] : []),
+          ],
         },
-        layout: [
-          {
-            blockType: 'content',
-            columns: [
-              {
-                size: 'full',
-                richText: {
-                  root: {
-                    type: 'root',
-                    children: [
-                      {
-                        type: 'heading',
-                        tag: 'h1',
-                        children: [{ type: 'text', version: 1, text: 'Our Mission & Vision' }],
-                        version: 1,
-                        direction: 'ltr',
-                        format: 'center',
-                        indent: 0,
-                      },
-                      {
-                        type: 'paragraph',
-                        children: [{ type: 'text', version: 1, text: 'We believe in empowering teams to build amazing digital experiences.' }],
-                        version: 1,
-                        direction: 'ltr',
-                        format: 'center',
-                        indent: 0,
-                      },
-                    ],
-                    direction: 'ltr',
-                    format: '',
-                    indent: 0,
-                    version: 1,
-                  },
-                },
-              },
-            ],
-          },
-          {
-            blockType: 'statistics',
-            stats: [
-              { value: '2015', label: 'Founded' },
-              { value: '100+', label: 'Team Members' },
-            ],
-          },
-        ],
-      },
-    })
+      })
 
-    // CONTACT PAGE
-    await payload.create({
-      collection: 'pages',
-      data: {
-        title: 'Contact Us',
-        slug: 'contact',
-        _status: 'published',
-        hero: {
-          type: 'none',
+      // Create Footer
+      await payload.create({
+        collection: 'footer',
+        data: {
+          website: website.id,
+          navItems: [
+            {
+              link: {
+                type: 'custom',
+                url: `/${website.slug}/home`,
+                label: 'Home',
+              },
+            },
+          ],
         },
-        layout: [
-          {
-            blockType: 'content',
-            columns: [
-              {
-                size: 'full',
-                richText: {
-                  root: {
-                    type: 'root',
-                    children: [
-                      {
-                        type: 'heading',
-                        tag: 'h1',
-                        children: [{ type: 'text', version: 1, text: 'Get in Touch' }],
-                        version: 1,
-                        direction: 'ltr',
-                        format: 'center',
-                        indent: 0,
-                      },
-                      {
-                        type: 'paragraph',
-                        children: [{ type: 'text', version: 1, text: 'We would love to hear from you. Reach out to our support team at support@example.com' }],
-                        version: 1,
-                        direction: 'ltr',
-                        format: 'center',
-                        indent: 0,
-                      },
-                    ],
-                    direction: 'ltr',
-                    format: '',
-                    indent: 0,
-                    version: 1,
-                  },
-                },
-              },
-            ],
-          },
-          {
-            blockType: 'faq',
-            title: 'Support FAQ',
-            questions: [
-              {
-                question: 'What are your support hours?',
-                answer: 'We are available 24/7.',
-              },
-            ],
-          },
-        ],
-      },
-    })
+      })
+    }
 
-    return Response.json({ success: true, message: 'Seeded successfully' })
+    return Response.json({ success: true, message: 'Database successfully seeded with users, websites, pages, headers, and footers.' })
   } catch (error: any) {
+    console.error('Seed Error:', error)
     return Response.json({ error: error.message }, { status: 500 })
   }
 }

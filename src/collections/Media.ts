@@ -8,9 +8,10 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { admins } from '../access/admins'
+import { isTenantAdmin, isTenantAdminCreate } from '../access/tenant'
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { tenantAssociation } from '../hooks/tenantAssociation'
+import { tenantListFilter } from '../access/tenantListFilter'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,12 +20,22 @@ export const Media: CollectionConfig = {
   slug: 'media',
   folders: true,
   access: {
-    create: authenticated,
-    delete: admins,
-    read: anyone,
-    update: authenticated,
+    create: isTenantAdminCreate,
+    delete: isTenantAdmin,
+    read: anyone, // Media files are publicly accessible if you have the URL
+    update: isTenantAdmin,
   },
   fields: [
+    {
+      name: 'website',
+      type: 'relationship',
+      relationTo: 'websites',
+      required: true,
+      admin: {
+        position: 'sidebar',
+        condition: (data, siblingData, { user }) => user?.roles?.includes('admin') || false,
+      },
+    },
     {
       name: 'alt',
       type: 'text',
@@ -78,5 +89,11 @@ export const Media: CollectionConfig = {
         crop: 'center',
       },
     ],
+  },
+  admin: {
+    baseListFilter: tenantListFilter,
+  },
+  hooks: {
+    beforeValidate: [tenantAssociation],
   },
 }

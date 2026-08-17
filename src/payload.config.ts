@@ -7,8 +7,9 @@ import { fileURLToPath } from 'url'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
+import { Websites } from './collections/Websites'
+import { Header } from './collections/Header'
+import { Footer } from './collections/Footer'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -44,19 +45,20 @@ export default buildConfig({
         },
       ],
     },
+    components: {
+      beforeNavLinks: ['@/components/TenantSelector#TenantSelector'],
+    },
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
-      max: 5,
     },
-    push: false,
+    push: true,
   }),
-  collections: [Pages, Media, Users],
+  collections: [Pages, Media, Users, Websites, Header, Footer],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

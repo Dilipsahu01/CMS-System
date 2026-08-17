@@ -1,6 +1,17 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
+let revalidatePath: (path: string) => void
+let revalidateTag: (tag: string) => void
+
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const nextCache = require('next/cache')
+  revalidatePath = nextCache.revalidatePath
+  revalidateTag = nextCache.revalidateTag
+} catch {
+  revalidatePath = () => {}
+  revalidateTag = () => {}
+}
 
 import type { Page } from '../../../payload-types'
 

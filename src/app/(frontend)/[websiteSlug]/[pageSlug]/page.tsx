@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
-import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
-import { draftMode } from 'next/headers'
+import { getPayload } from 'payload'
+import { draftMode, headers } from 'next/headers'
 import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -18,19 +18,24 @@ export async function generateStaticParams() {
     collection: 'pages',
     draft: false,
     limit: 1000,
-    overrideAccess: false,
+    overrideAccess: true,
     pagination: false,
     select: {
       slug: true,
+      website: true,
     },
   })
 
   const params = pages.docs
     ?.filter((doc) => {
-      return doc.slug !== 'home'
+      return doc.slug && typeof doc.slug === 'string' && doc.slug !== 'home'
     })
-    .map(({ slug }) => {
-      return { slug }
+    .map(({ slug, website }) => {
+      let websiteSlug = 'default'
+      if (typeof website === 'object' && website?.slug) {
+        websiteSlug = website.slug
+      }
+      return { websiteSlug, pageSlug: slug }
     })
 
   return params
@@ -38,19 +43,22 @@ export async function generateStaticParams() {
 
 type Args = {
   params: Promise<{
-    slug?: string
+    websiteSlug: string
+    pageSlug?: string
   }>
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
-  const { slug = 'home' } = await paramsPromise
+  const { websiteSlug, pageSlug = 'home' } = await paramsPromise
   // Decode to support slugs with special characters
-  const decodedSlug = decodeURIComponent(slug)
-  const url = '/' + decodedSlug
+  const decodedWebsiteSlug = decodeURIComponent(websiteSlug)
+  const decodedPageSlug = decodeURIComponent(pageSlug)
+  const url = `/${decodedWebsiteSlug}/${decodedPageSlug}`
 
   const page = await queryPageBySlug({
-    slug: decodedSlug,
+    websiteSlug: decodedWebsiteSlug,
+    slug: decodedPageSlug,
   })
 
   if (!page) {
@@ -74,33 +82,60 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
+  const { websiteSlug, pageSlug = 'home' } = await paramsPromise
   // Decode to support slugs with special characters
-  const decodedSlug = decodeURIComponent(slug)
+  const decodedWebsiteSlug = decodeURIComponent(websiteSlug)
+  const decodedPageSlug = decodeURIComponent(pageSlug)
   const page = await queryPageBySlug({
-    slug: decodedSlug,
+    websiteSlug: decodedWebsiteSlug,
+    slug: decodedPageSlug,
   })
 
   return generateMeta({ doc: page })
 }
 
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
+const queryPageBySlug = cache(async ({ websiteSlug, slug }: { websiteSlug: string; slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
   const payload = await getPayload({ config: configPromise })
+
+  const requestHeaders = await headers()
+  const { user } = await payload.auth({ headers: requestHeaders })
+
+  // Fetch website ID first with overrideAccess to avoid access control limits on website.slug
+  const websites = await payload.find({
+    collection: 'websites',
+    where: { slug: { equals: websiteSlug } },
+    depth: 0,
+    overrideAccess: true,
+  })
+
+  if (!websites.docs.length) return null
+  const websiteId = websites.docs[0].id
 
   const result = await payload.find({
     collection: 'pages',
     draft,
     limit: 1,
     pagination: false,
-    overrideAccess: draft,
+    overrideAccess: false,
+    user,
     where: {
-      slug: {
-        equals: slug,
-      },
+      and: [
+        {
+          slug: {
+            equals: slug,
+          },
+        },
+        {
+          website: {
+            equals: websiteId,
+          },
+        },
+      ],
     },
   })
 
   return result.docs?.[0] || null
 })
+

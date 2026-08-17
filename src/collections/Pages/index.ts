@@ -1,8 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-import { admins } from '../../access/admins'
-import { authenticated } from '../../access/authenticated'
-import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { canCreatePage, canReadPage, canUpdateOrDeletePage } from '../../access/tenant'
+
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
@@ -15,6 +14,8 @@ import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
+import { tenantAssociation } from '../../hooks/tenantAssociation'
+import { tenantListFilter } from '../../access/tenantListFilter'
 
 import {
   MetaDescriptionField,
@@ -27,10 +28,10 @@ import {
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    create: authenticated,
-    delete: admins,
-    read: authenticatedOrPublished,
-    update: authenticated,
+    create: canCreatePage,
+    delete: canUpdateOrDeletePage,
+    read: canReadPage,
+    update: canUpdateOrDeletePage,
   },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
@@ -40,24 +41,46 @@ export const Pages: CollectionConfig<'pages'> = {
     slug: true,
   },
   admin: {
+    baseListFilter: tenantListFilter,
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
-      url: ({ data, req }) =>
-        generatePreviewPath({
+      url: async ({ data, req }) =>
+        await generatePreviewPath({
           slug: data?.slug,
           collection: 'pages',
           req,
+          website: data?.website,
         }),
     },
-    preview: (data, { req }) =>
-      generatePreviewPath({
+    preview: async (data, { req }) =>
+      await generatePreviewPath({
         slug: data?.slug as string,
         collection: 'pages',
         req,
+        website: data?.website,
       }),
     useAsTitle: 'title',
   },
   fields: [
+    {
+      name: 'website',
+      type: 'relationship',
+      relationTo: 'websites',
+      required: true,
+      admin: {
+        position: 'sidebar',
+        condition: (data, siblingData, { user }) => user?.roles?.includes('admin') || false,
+      },
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+        condition: (data, siblingData, { user }) => user?.roles?.includes('admin') || false,
+      },
+    },
     {
       name: 'title',
       type: 'text',
@@ -120,9 +143,20 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
-    slugField(),
+    slugField({ disableUnique: true }),
   ],
   hooks: {
+    beforeValidate: [
+      tenantAssociation,
+      ({ req, operation, data }) => {
+        if (operation === 'create' && req.user) {
+          if (!data?.author) {
+            data.author = req.user.id
+          }
+        }
+        return data
+      },
+    ],
     afterChange: [revalidatePage],
     beforeChange: [populatePublishedAt],
     afterDelete: [revalidateDelete],

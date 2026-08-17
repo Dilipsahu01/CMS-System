@@ -1,0 +1,195 @@
+
+> business-website@1.0.0 dev
+> cross-env NODE_OPTIONS=--no-deprecation next dev
+
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.106:3000
+- Environments: .env
+✓ Ready in 228ms
+✓ Running next.config.ts took 24ms
+- Experiments (use with caution):
+  ⨯ turbopackServerFastRefresh
+
+⨯ ReferenceError: generateMetadata is not defined
+    at Module.generateMetadata (.next/dev/server/chunks/ssr/[root-of-the-server]__0c1y-_f._.js:15:9) {
+  digest: '3946690936'
+}
+ GET / 307 in 803ms (next.js: 630ms, application-code: 173ms)
+[⣷] Pulling schema from database...
+[2K[1G[⣯] Pulling schema from database...
+[2K[1G[⣟] Pulling schema from database...
+[2K[1G[⡿] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[17:48:46] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /admin/login 200 in 3.3s (next.js: 1262ms, application-code: 2.0s)
+ GET /admin/login 200 in 111ms (next.js: 18ms, application-code: 93ms)
+ GET /api/users/me 200 in 1368ms (next.js: 1277ms, application-code: 91ms)
+ GET /api/users/me 200 in 27ms (next.js: 20ms, application-code: 7ms)
+ POST /api/users/login 200 in 115ms (next.js: 2ms, application-code: 112ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ GET /admin 200 in 214ms (next.js: 22ms, application-code: 192ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ GET /api/websites?limit=100 200 in 73ms (next.js: 33ms, application-code: 41ms)
+ GET /admin/collections/websites/create 200 in 240ms (next.js: 5ms, application-code: 235ms)
+ GET /api/websites?limit=100 200 in 45ms (next.js: 24ms, application-code: 21ms)
+ GET /api/users/me 200 in 17ms (next.js: 2ms, application-code: 15ms)
+ GET /api/payload-preferences/collection-websites 200 in 17ms (next.js: 5ms, application-code: 12ms)
+ GET /api/websites?limit=100 200 in 15ms (next.js: 2ms, application-code: 13ms)
+ GET /api/users/me 200 in 17ms (next.js: 6ms, application-code: 10ms)
+ POST /api/payload-preferences/collection-websites 200 in 29ms (next.js: 1.6ms, application-code: 27ms)
+ POST /api/websites?depth=0&fallback-locale=null 201 in 23ms (next.js: 2ms, application-code: 21ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ GET /admin/collections/websites/199 200 in 155ms (next.js: 4ms, application-code: 151ms)
+ GET /api/websites?limit=100 200 in 15ms (next.js: 2ms, application-code: 12ms)
+ GET /api/websites?limit=100 200 in 14ms (next.js: 1.4ms, application-code: 13ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[tenantAssociation] TRIGGERED for operation create. User Email: normal@test.com, Roles: ["user"]
+[tenantAssociation] User 216 has 1 websites.
+[tenantAssociation] Auto-assigning website 199 for user 216
+ GET /admin/collections/pages/create 307 in 289ms (next.js: 3ms, application-code: 286ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: 199
+[isTenantAdminCreate] User ID: 216, Data Website: 199
+ GET /admin/collections/pages/113 200 in 344ms (next.js: 24ms, application-code: 319ms)
+ GET /api/websites?limit=100 200 in 17ms (next.js: 1.6ms, application-code: 15ms)
+ GET /api/payload-preferences/collection-pages-113 200 in 21ms (next.js: 5ms, application-code: 16ms)
+ GET /api/users/me 200 in 23ms (next.js: 11ms, application-code: 12ms)
+ GET /api/payload-preferences/collection-pages 200 in 15ms (next.js: 6ms, application-code: 8ms)
+ GET /api/websites?limit=100 200 in 20ms (next.js: 4ms, application-code: 17ms)
+ GET /api/users/me 200 in 12ms (next.js: 4ms, application-code: 8ms)
+ POST /api/payload-preferences/collection-pages 200 in 45ms (next.js: 18ms, application-code: 27ms)
+[tenantAssociation] TRIGGERED for operation update. User Email: normal@test.com, Roles: ["user"]
+ POST /api/payload-preferences/collection-pages-113 200 in 50ms (next.js: 3ms, application-code: 47ms)
+ PATCH /api/pages/113?autosave=true&depth=0&draft=true&fallback-locale=null 200 in 77ms (next.js: 8ms, application-code: 69ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ POST /admin/collections/pages/113 200 in 35ms (next.js: 3ms, application-code: 32ms)
+  └─ ƒ <inline action>({"args":{"collectionSlug":"pages","data":"[Object]","docPermissions":"[Object]","...":"11 items not stringified"},"name":"form-state"}) in 21ms src/app/(payload)/layout.tsx
+[tenantAssociation] TRIGGERED for operation update. User Email: normal@test.com, Roles: ["user"]
+ PATCH /api/pages/113?autosave=true&depth=0&draft=true&fallback-locale=null 200 in 67ms (next.js: 2ms, application-code: 65ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ POST /admin/collections/pages/113 200 in 43ms (next.js: 20ms, application-code: 23ms)
+  └─ ƒ <inline action>({"args":{"collectionSlug":"pages","data":"[Object]","docPermissions":"[Object]","...":"11 items not stringified"},"name":"form-state"}) in 17ms src/app/(payload)/layout.tsx
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ POST /admin/collections/pages/113 200 in 60ms (next.js: 2ms, application-code: 58ms)
+  └─ ƒ <inline action>({"args":{"checkForStaleData":false,"collectionSlug":"pages","docPermissions":"[Object]","...":"10 items not stringified"},"name":"form-state"}) in 51ms src/app/(payload)/layout.tsx
+[tenantAssociation] TRIGGERED for operation update. User Email: normal@test.com, Roles: ["user"]
+ PATCH /api/pages/113?autosave=true&depth=0&draft=true&fallback-locale=null 200 in 59ms (next.js: 1.4ms, application-code: 57ms)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+[isTenantAdminCreate] User ID: 216, Data Website: undefined
+[isTenantAdminCreate] Allowed because no website provided (will rely on hook/validation)
+ POST /admin/collections/pages/113 200 in 30ms (next.js: 3ms, application-code: 26ms)
+  └─ ƒ <inline action>({"args":{"collectionSlug":"pages","data":"[Object]","docPermissions":"[Object]","...":"11 items not stringified"},"name":"form-state"}) in 18ms src/app/(payload)/layout.tsx
