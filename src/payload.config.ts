@@ -54,6 +54,7 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      max: process.env.VERCEL ? 1 : 10, // Use 1 connection per serverless function on Vercel
     },
     push: true,
   }),
