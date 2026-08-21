@@ -13,6 +13,9 @@ import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
+  // Skip static generation during Vercel builds to avoid DB connection hangs
+  if (process.env.VERCEL) return []
+
   const payload = await getPayload({ config: configPromise })
   const pages = await payload.find({
     collection: 'pages',

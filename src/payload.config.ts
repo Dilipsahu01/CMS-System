@@ -55,8 +55,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
       max: process.env.VERCEL ? 1 : 10, // Use 1 connection per serverless function on Vercel
+      idleTimeoutMillis: process.env.VERCEL ? 10_000 : 30_000, // Release idle connections after 10s on Vercel
+      connectionTimeoutMillis: 5_000, // Fail fast if DB is unreachable
     },
-    push: true,
+    push: !process.env.VERCEL, // Only push schema locally, never during Vercel builds
   }),
   collections: [Pages, Media, Users, Websites, Header, Footer],
   cors: [getServerSideURL()].filter(Boolean),
