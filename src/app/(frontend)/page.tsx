@@ -3,6 +3,9 @@ import React from 'react'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
+// Render on-demand, not at build time (DB not available during Vercel builds)
+export const dynamic = 'force-dynamic'
+
 export default async function PageTemplate() {
   const payload = await getPayload({ config: configPromise })
 
